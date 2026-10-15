@@ -1,0 +1,17 @@
+#!name=ZEEHO Hexagon
+#!desc=ZEEHO 轨迹估算 + 月度缓存 + 六项统计
+#!author=转换版
+#!homepage=https://github.com/AD030120/-loon
+
+[Script]
+# 捕获原生轨迹请求认证
+http-request ^https://tapi\.zeehoev\.com/v1\.0/app/cfmotoserverapp/ridetrack_v2(?:\?.*)?$ script-path=https://raw.githubusercontent.com/AD030120/-loon/main/ZEEHO_Hexagon.js, requires-body=false, timeout=10, tag=ZEEHO_Hexagon_Request
+
+# 六项统计显示 + 轨迹估算、日/月缓存及雷达
+http-response ^https://tapi\.zeehoev\.com/v1\.0/app/cfmotoserverapp/(?:vehicle/list|vehicleHomePageV2/[^?#]*|ridetrack_v2|myRideInfo|analyse/analyse)(?:\?.*)?$ script-path=https://raw.githubusercontent.com/AD030120/-loon/main/ZEEHO_Hexagon.js, requires-body=true, timeout=10, tag=ZEEHO_Hexagon_Response
+
+# 每15分钟自动按月缓存
+cron "*/15 * * * *" script-path=https://raw.githubusercontent.com/AD030120/-loon/main/ZEEHO_Hexagon.js, tag=ZEEHO 自动按月缓存
+
+[MITM]
+hostname = tapi.zeehoev.com
